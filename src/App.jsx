@@ -1,29 +1,15 @@
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
 import {
   Box,
-  Button,
+  Container,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   useColorScheme,
 } from "@mui/material";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
-
-const ModeToggle = () => {
-  const { mode, setMode } = useColorScheme();
-
-  return (
-    <Button
-      onClick={() => {
-        setMode(mode === "light" ? "dark" : "light");
-      }}
-    >
-      {mode === "light" ? "Turn dark" : "Turn light"}
-    </Button>
-  );
-};
 
 export function SelectSmall() {
   const { mode, setMode } = useColorScheme();
@@ -92,11 +78,48 @@ export function SelectSmall() {
 
 function App() {
   return (
-    <>
-      <Button variant="contained">Hello World</Button>
-      <ModeToggle />
-      <SelectSmall />
-    </>
+    <Container
+      disableGutters
+      maxWidth={false}
+      style={{ height: "100vh", backgroundColor: "primary.main" }}
+    >
+      <Box
+        sx={{
+          backgroundColor: "primary.light",
+          width: "100%",
+          height: (theme) => theme.trelloCustom.appBarHeight,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <SelectSmall />
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: "primary.dark",
+          width: "100%",
+          height: (theme) => theme.trelloCustom.boardBarHeight,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        Board Bar
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: "primary.main",
+          width: "100%",
+          height: (theme) =>
+            `calc(100vh - ${theme.trelloCustom.appBarHeight} - ${theme.trelloCustom.boardBarHeight})`,
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        Board Content
+      </Box>
+    </Container>
   );
 }
 
