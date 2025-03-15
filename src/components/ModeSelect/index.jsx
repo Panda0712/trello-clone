@@ -19,7 +19,7 @@ const ModeSelect = () => {
   };
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+    <FormControl size="small">
       <InputLabel id="mode-color">Mode</InputLabel>
       <Select
         labelId="model-color"
