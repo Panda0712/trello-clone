@@ -31,7 +31,6 @@ const BoardBar = () => {
         alignItems: "center",
         gap: 2,
         paddingX: 2,
-        paddingY: 4,
         overflowX: "auto",
         borderBottom: "1px solid white",
         bgcolor: (theme) =>
@@ -93,6 +92,11 @@ const BoardBar = () => {
               height: 34,
               fontSize: 16,
               border: "none",
+              color: "white",
+              cursor: "pointer",
+              "&:first-of-type": {
+                bgcolor: "#a4b0de",
+              },
             },
           }}
         >
