@@ -20,9 +20,34 @@ const ModeSelect = () => {
 
   return (
     <FormControl size="small" sx={{ minWidth: 120 }}>
-      <InputLabel id="mode-color">Mode</InputLabel>
+      <InputLabel
+        sx={{
+          color: "white",
+          "&.Mui-focused": {
+            color: "white",
+          },
+        }}
+        id="mode-color"
+      >
+        Mode
+      </InputLabel>
       <Select
         labelId="model-color"
+        sx={{
+          color: "white",
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "white",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "white",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "white",
+          },
+          "& .MuiSvgIcon-root": {
+            color: "white",
+          },
+        }}
         id="mode"
         value={mode}
         label="Mode"
