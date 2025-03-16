@@ -33,7 +33,7 @@ const Profiles = () => {
           aria-expanded={open ? "true" : undefined}
         >
           <Avatar
-            sx={{ width: 30, height: 30, cursor: "pointer" }}
+            sx={{ width: 35, height: 35, cursor: "pointer" }}
             alt="s-avatar"
             src="https://allporncomic.com/wp-content/uploads/2019/02/001-21.jpg"
           />
