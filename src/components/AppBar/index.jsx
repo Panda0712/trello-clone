@@ -29,7 +29,6 @@ const AppBar = () => {
   return (
     <Box
       px={2}
-      py={5}
       sx={{
         backgroundColor: "#fff",
         width: "100%",
