@@ -1,9 +1,10 @@
 // Board Details
 
 import { Container } from "@mui/material";
+import { mockData } from "~/apis/mock-data";
+import AppBar from "~/components/AppBar/AppBar";
 import BoardBar from "./BoardBar/BoardBar";
 import BoardContent from "./BoardContent/BoardContent";
-import AppBar from "~/components/AppBar/AppBar";
 
 const Board = () => {
   return (
@@ -13,8 +14,8 @@ const Board = () => {
       style={{ height: "100vh", backgroundColor: "primary.main" }}
     >
       <AppBar />
-      <BoardBar />
-      <BoardContent />
+      <BoardBar board={mockData?.board} />
+      <BoardContent board={mockData?.board} />
     </Container>
   );
 };
