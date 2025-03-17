@@ -1,6 +1,8 @@
 import {
+  defaultDropAnimationSideEffects,
   DndContext,
   // PointerSensor,
+  DragOverlay,
   MouseSensor,
   TouchSensor,
   useSensor,
@@ -8,11 +10,22 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
+import Column from "~/pages/Boards/BoardContent/ListColumns/Column/Column";
+import CustomCard from "~/pages/Boards/BoardContent/ListColumns/Column/ListCards/Card/Card";
 import ListColumns from "~/pages/Boards/BoardContent/ListColumns/ListColumns";
 import { mapOrder } from "~/utils/sorts";
 
+const ACTIVE_DRAG_ITEM_TYPE = {
+  COLUMN: "ACTIVE_DRAG_ITEM_TYPE_COLUMN",
+  CARD: "ACTIVE_DRAG_ITEM_TYPE_CARD",
+};
+
 const BoardContent = ({ board }) => {
   const [orderedColumns, setOrderColumns] = useState([]);
+
+  const [activeDragItemId, setActiveDragItemId] = useState(null);
+  const [activeDragItemType, setActiveDragItemType] = useState(null);
+  const [activeDragItemData, setActiveDragItemData] = useState(null);
 
   // const pointerSensor = useSensor(PointerSensor, {
   //   activationConstraint: {
@@ -32,6 +45,16 @@ const BoardContent = ({ board }) => {
   });
   const sensors = useSensors(mouseSensor, touchSensor);
 
+  const handleDragStart = (event) => {
+    setActiveDragItemId(event?.active?.id);
+    setActiveDragItemType(
+      event?.active?.data?.current?.columnId
+        ? ACTIVE_DRAG_ITEM_TYPE.CARD
+        : ACTIVE_DRAG_ITEM_TYPE.COLUMN
+    );
+    setActiveDragItemData(event?.active?.data?.current);
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
@@ -46,6 +69,20 @@ const BoardContent = ({ board }) => {
 
       setOrderColumns(dndNewOrdered);
     }
+
+    setActiveDragItemId(null);
+    setActiveDragItemType(null);
+    setActiveDragItemData(null);
+  };
+
+  const dropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: "0.5",
+        },
+      },
+    }),
   };
 
   useEffect(() => {
@@ -53,8 +90,21 @@ const BoardContent = ({ board }) => {
   }, [board]);
 
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
       <ListColumns columns={orderedColumns} />;
+      <DragOverlay dropAnimation={dropAnimation}>
+        {!activeDragItemType && null}
+        {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
+          <Column column={activeDragItemData} />
+        )}
+        {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD && (
+          <CustomCard card={activeDragItemData} />
+        )}
+      </DragOverlay>
     </DndContext>
   );
 };
