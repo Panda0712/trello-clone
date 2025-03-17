@@ -1,3 +1,5 @@
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   AddCard,
   Cloud,
@@ -34,10 +36,23 @@ const Column = ({ column }) => {
     setAnchorEl(null);
   };
 
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: column._id, data: { ...column } });
+
+  const dndKitColumnStyles = {
+    // touchAction: "none",
+    transform: CSS.Translate.toString(transform),
+    transition,
+  };
+
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, "_id");
 
   return (
     <Box
+      ref={setNodeRef}
+      style={dndKitColumnStyles}
+      {...attributes}
+      {...listeners}
       sx={{
         minWidth: 300,
         maxWidth: 300,
