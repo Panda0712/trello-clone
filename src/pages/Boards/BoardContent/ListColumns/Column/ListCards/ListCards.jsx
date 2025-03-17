@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import CustomCard from "~/pages/Boards/BoardContent/ListColumns/Column/ListCards/Card/Card";
 
-const ListCards = () => {
+const ListCards = ({ cards }) => {
   return (
     <Box
       sx={{
@@ -26,13 +26,9 @@ ${theme.trelloCustom.columnFooterHeight})`,
         },
       }}
     >
-      <CustomCard />
-      <CustomCard temporaryHideMedia />
-      <CustomCard temporaryHideMedia />
-      <CustomCard temporaryHideMedia />
-      <CustomCard temporaryHideMedia />
-      <CustomCard temporaryHideMedia />
-      <CustomCard temporaryHideMedia />
+      {cards.map((card) => (
+        <CustomCard key={card._id} card={card} />
+      ))}
     </Box>
   );
 };

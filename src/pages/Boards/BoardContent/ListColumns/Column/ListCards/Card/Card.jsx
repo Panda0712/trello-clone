@@ -8,29 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 
-const CustomCard = ({ temporaryHideMedia }) => {
-  if (temporaryHideMedia) {
-    return (
-      <Card
-        sx={{
-          cursor: "pointer",
-          boxShadow: "0 1px 1px rgba(0,0,0,0.2)",
-          overflow: "unset",
-        }}
-      >
-        <CardContent
-          sx={{
-            p: 1.5,
-            "&:last-child": {
-              p: 1.5,
-            },
-          }}
-        >
-          <Typography>Panda MERN Stack</Typography>
-        </CardContent>
-      </Card>
-    );
-  }
+const CustomCard = ({ card }) => {
+  const showCardActions =
+    !!card?.memberIds?.length ||
+    !!card?.comments?.length ||
+    !!card?.attachments?.length;
 
   return (
     <Card
@@ -40,11 +22,13 @@ const CustomCard = ({ temporaryHideMedia }) => {
         overflow: "unset",
       }}
     >
-      <CardMedia
-        sx={{ height: 140 }}
-        image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD-9774ovWzYp6o-qiMg1_8Ok9OSPz_U135w&s"
-        title="green iguana"
-      />
+      {card?.cover && (
+        <CardMedia
+          sx={{ height: 140 }}
+          image={card.cover}
+          title={card?.title}
+        />
+      )}
       <CardContent
         sx={{
           p: 1.5,
@@ -53,19 +37,27 @@ const CustomCard = ({ temporaryHideMedia }) => {
           },
         }}
       >
-        <Typography>Panda MERN Stack</Typography>
+        <Typography>{card?.title}</Typography>
       </CardContent>
-      <CardActions sx={{ p: "0 4px 8px 4px" }}>
-        <Button size="small" startIcon={<Group />}>
-          20
-        </Button>
-        <Button size="small" startIcon={<Comment />}>
-          15
-        </Button>
-        <Button size="small" startIcon={<Attachment />}>
-          10
-        </Button>
-      </CardActions>
+      {showCardActions && (
+        <CardActions sx={{ p: "0 4px 8px 4px" }}>
+          {!!card?.memberIds?.length && (
+            <Button size="small" startIcon={<Group />}>
+              {card.memberIds.length}
+            </Button>
+          )}
+          {!!card?.comments?.length && (
+            <Button size="small" startIcon={<Comment />}>
+              {card.comments.length}
+            </Button>
+          )}
+          {!!card?.attachments.length && (
+            <Button size="small" startIcon={<Attachment />}>
+              {card.attachments.length}
+            </Button>
+          )}
+        </CardActions>
+      )}
     </Card>
   );
 };
