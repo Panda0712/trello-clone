@@ -1,8 +1,8 @@
+/* eslint-disable indent */
 import {
   closestCorners,
   defaultDropAnimationSideEffects,
   DndContext,
-  // PointerSensor,
   DragOverlay,
   MouseSensor,
   TouchSensor,
@@ -28,12 +28,9 @@ const BoardContent = ({ board }) => {
   const [activeDragItemId, setActiveDragItemId] = useState(null);
   const [activeDragItemType, setActiveDragItemType] = useState(null);
   const [activeDragItemData, setActiveDragItemData] = useState(null);
+  const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] =
+    useState(null);
 
-  // const pointerSensor = useSensor(PointerSensor, {
-  //   activationConstraint: {
-  //     distance: 10,
-  //   },
-  // });
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       distance: 10,
@@ -61,6 +58,10 @@ const BoardContent = ({ board }) => {
         : ACTIVE_DRAG_ITEM_TYPE.COLUMN
     );
     setActiveDragItemData(event?.active?.data?.current);
+
+    if (event?.active?.data?.current?.columnId) {
+      setOldColumnWhenDraggingCard(findColumnByCardId(event?.active?.id));
+    }
   };
 
   const handleDragOver = (event) => {
@@ -140,27 +141,110 @@ const BoardContent = ({ board }) => {
   };
 
   const handleDragEnd = (event) => {
-    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
-      return;
-    }
-
     const { active, over } = event;
 
     if (!over || !active) return;
 
-    if (active.id !== over.id) {
-      const oldIndex = orderedColumns.findIndex((c) => c._id === active.id);
-      const newIndex = orderedColumns.findIndex((c) => c._id === over.id);
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
+      const {
+        id: activeDraggingCardId,
+        data: { current: activeDraggingCardData },
+      } = active;
+      const { id: overCardId } = over;
 
-      const dndNewOrdered = arrayMove(orderedColumns, oldIndex, newIndex);
-      // const dndNewOrderedIds = dndNewOrdered.map((c) => c._id);
+      const activeColumn = findColumnByCardId(activeDraggingCardId);
+      const overColumn = findColumnByCardId(overCardId);
 
-      setOrderColumns(dndNewOrdered);
+      if (!activeColumn || !overColumn) return;
+
+      if (oldColumnWhenDraggingCard._id !== overColumn._id) {
+        const overCardIndex = overColumn.cards.findIndex(
+          (c) => c._id === overCardId
+        );
+        let newCardIndex;
+        const isBelowOverItem =
+          active.rect.current.translated &&
+          active.rect.current.translated.top > over.rect.top + over.rect.height;
+
+        const modifier = isBelowOverItem ? 1 : 0;
+
+        newCardIndex =
+          overCardIndex >= 0
+            ? overCardIndex + modifier
+            : overColumn?.cards?.length + 1;
+
+        // Handle Old Column
+        oldColumnWhenDraggingCard.cards =
+          oldColumnWhenDraggingCard.cards.filter(
+            (c) => c._id !== activeDraggingCardId
+          );
+        oldColumnWhenDraggingCard.cardOrderIds =
+          oldColumnWhenDraggingCard.cards.map((c) => c._id);
+
+        // Handle New Column
+        overColumn.cards = overColumn.cards.filter(
+          (c) => c._id !== activeDraggingCardId
+        );
+
+        overColumn.cards = overColumn.cards.toSpliced(
+          newCardIndex,
+          0,
+          activeDraggingCardData
+        );
+        overColumn.cardOrderIds = overColumn.cards.map((c) => c._id);
+
+        setOrderColumns((c) =>
+          c._id === oldColumnWhenDraggingCard._id
+            ? oldColumnWhenDraggingCard
+            : c._id === overColumn._id
+            ? overColumn
+            : c
+        );
+      } else {
+        const oldIndex = oldColumnWhenDraggingCard.cards.findIndex(
+          (c) => c._id === activeDragItemId
+        );
+        const newIndex = oldColumnWhenDraggingCard.cards.findIndex(
+          (c) => c._id === overCardId
+        );
+
+        const cardNewOrdered = arrayMove(
+          oldColumnWhenDraggingCard.cards,
+          oldIndex,
+          newIndex
+        );
+
+        const cardNewOrderIds = cardNewOrdered.map((c) => c._id);
+
+        const newOrderedColumns = orderedColumns.map((c) =>
+          c._id === oldColumnWhenDraggingCard._id
+            ? {
+                ...c,
+                cardOrderIds: cardNewOrderIds,
+                cards: cardNewOrdered,
+              }
+            : c
+        );
+        setOrderColumns(newOrderedColumns);
+      }
+    }
+
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+      if (active.id !== over.id) {
+        const oldIndex = orderedColumns.findIndex((c) => c._id === active.id);
+        const newIndex = orderedColumns.findIndex((c) => c._id === over.id);
+
+        const dndNewOrdered = arrayMove(orderedColumns, oldIndex, newIndex);
+        // const dndNewOrderedIds = dndNewOrdered.map((c) => c._id);
+
+        setOrderColumns(dndNewOrdered);
+      }
     }
 
     setActiveDragItemId(null);
     setActiveDragItemType(null);
     setActiveDragItemData(null);
+    setOldColumnWhenDraggingCard(null);
   };
 
   const dropAnimation = {
