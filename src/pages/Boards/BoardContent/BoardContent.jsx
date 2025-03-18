@@ -12,11 +12,12 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Column from "~/pages/Boards/BoardContent/ListColumns/Column/Column";
 import CustomCard from "~/pages/Boards/BoardContent/ListColumns/Column/ListCards/Card/Card";
 import ListColumns from "~/pages/Boards/BoardContent/ListColumns/ListColumns";
+import { generatePlaceholderCard } from "~/utils/formatters";
 import { mapOrder } from "~/utils/sorts";
 
 const ACTIVE_DRAG_ITEM_TYPE = {
@@ -118,6 +119,12 @@ const BoardContent = ({ board }) => {
             (card) => card._id !== activeDraggingCardId
           );
 
+          if (isEmpty(nextActiveColumn.cards)) {
+            nextActiveColumn.cards = [
+              generatePlaceholderCard(nextActiveColumn),
+            ];
+          }
+
           nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(
             (card) => card._id
           );
@@ -137,6 +144,10 @@ const BoardContent = ({ board }) => {
             newCardIndex,
             0,
             updateActiveData
+          );
+
+          nextOverColumn.cards = nextOverColumn.cards.filter(
+            (c) => !c.FE_PlaceholderCard
           );
 
           nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
@@ -187,6 +198,13 @@ const BoardContent = ({ board }) => {
           oldColumnWhenDraggingCard.cards.filter(
             (c) => c._id !== activeDraggingCardId
           );
+
+        if (isEmpty(oldColumnWhenDraggingCard.cards)) {
+          oldColumnWhenDraggingCard.cards = [
+            generatePlaceholderCard(oldColumnWhenDraggingCard),
+          ];
+        }
+
         oldColumnWhenDraggingCard.cardOrderIds =
           oldColumnWhenDraggingCard.cards.map((c) => c._id);
 
@@ -205,6 +223,11 @@ const BoardContent = ({ board }) => {
           0,
           updateActiveData
         );
+
+        overColumn.cards = overColumn.cards.filter(
+          (c) => !c.FE_PlaceholderCard
+        );
+
         overColumn.cardOrderIds = overColumn.cards.map((c) => c._id);
 
         setOrderColumns((c) =>
