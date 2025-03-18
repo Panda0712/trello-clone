@@ -124,10 +124,15 @@ const BoardContent = ({ board }) => {
             (card) => card._id !== activeDraggingCardId
           );
 
+          const updateActiveData = {
+            ...activeDraggingCardData,
+            columnId: overColumn._id,
+          };
+
           nextOverColumn.cards = nextOverColumn.cards.toSpliced(
             newCardIndex,
             0,
-            activeDraggingCardData
+            updateActiveData
           );
 
           nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
@@ -186,10 +191,15 @@ const BoardContent = ({ board }) => {
           (c) => c._id !== activeDraggingCardId
         );
 
+        const updateActiveData = {
+          ...activeDraggingCardData,
+          columnId: overColumn._id,
+        };
+
         overColumn.cards = overColumn.cards.toSpliced(
           newCardIndex,
           0,
-          activeDraggingCardData
+          updateActiveData
         );
         overColumn.cardOrderIds = overColumn.cards.map((c) => c._id);
 
