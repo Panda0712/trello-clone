@@ -23,7 +23,9 @@ const theme = extendTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
+          position: "relative",
           height: "100vh",
+          overflowY: "hidden",
           "*::-webkit-scrollbar": {
             width: "8px",
             height: "8px",

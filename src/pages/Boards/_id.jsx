@@ -11,7 +11,11 @@ const Board = () => {
     <Container
       disableGutters
       maxWidth={false}
-      style={{ height: "100vh", backgroundColor: "primary.main" }}
+      style={{
+        height: "100vh",
+        backgroundColor: "primary.main",
+        overflowY: "hidden",
+      }}
     >
       <AppBar />
       <BoardBar board={mockData?.board} />
