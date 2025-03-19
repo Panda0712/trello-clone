@@ -1,10 +1,10 @@
-import { Avatar, AvatarGroup, Box, Button, Chip, Tooltip } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import VpnLockIcon from "@mui/icons-material/VpnLock";
 import AddToDriveIcon from "@mui/icons-material/AddToDrive";
 import BoltIcon from "@mui/icons-material/Bolt";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import VpnLockIcon from "@mui/icons-material/VpnLock";
+import { Avatar, AvatarGroup, Box, Button, Chip, Tooltip } from "@mui/material";
 import { capitalizeFirstLetter } from "~/utils/formatters";
 
 const MENU_STYLES = {

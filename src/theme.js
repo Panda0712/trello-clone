@@ -1,13 +1,19 @@
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 
+// config height for the app bar
 const APP_BAR_HEIGHT = "60px";
+// config height for the board bar
 const BOARD_BAR_HEIGHT = "65px";
+// config height for the board content
 const BOARD_CONTENT_HEIGHT = `calc(100vh - ${APP_BAR_HEIGHT} - ${BOARD_BAR_HEIGHT})`;
+// config height for the column header
 const COLUMN_HEADER_HEIGHT = "50px";
+// config height for the column footer
 const COLUMN_FOOTER_HEIGHT = "50px";
 
 // Create a theme instance.
 const theme = extendTheme({
+  // custom height variables for reuseable
   trelloCustom: {
     appBarHeight: APP_BAR_HEIGHT,
     boardBarHeight: BOARD_BAR_HEIGHT,
@@ -19,13 +25,16 @@ const theme = extendTheme({
     light: {},
     dark: {},
   },
+  // override the css root for the components of MaterialUI
   components: {
+    // general css of the project
     MuiCssBaseline: {
       styleOverrides: {
         body: {
           position: "relative",
           height: "100vh",
           overflowY: "hidden",
+          // config scrollbar css for the entire web
           "*::-webkit-scrollbar": {
             width: "8px",
             height: "8px",
@@ -40,6 +49,7 @@ const theme = extendTheme({
         },
       },
     },
+    // override button components css of MaterialUI
     MuiButton: {
       styleOverrides: {
         root: {
@@ -52,6 +62,7 @@ const theme = extendTheme({
         },
       },
     },
+    // override input label components css of MaterialUI
     MuiInputLabel: {
       styleOverrides: {
         root: {
@@ -59,6 +70,7 @@ const theme = extendTheme({
         },
       },
     },
+    // override typography components css of MaterialUI
     MuiTypography: {
       styleOverrides: {
         root: {
@@ -68,6 +80,7 @@ const theme = extendTheme({
         },
       },
     },
+    // override the outlined input components css of MaterialUI
     MuiOutlinedInput: {
       styleOverrides: {
         root: {

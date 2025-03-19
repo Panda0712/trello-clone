@@ -35,6 +35,7 @@ const ModeSelect = () => {
         labelId="model-color"
         sx={{
           color: "white",
+          // custom the border of the outlined input with notchedOutline class of MaterialUI
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "white",
           },

@@ -7,6 +7,9 @@ import BoardBar from "./BoardBar/BoardBar";
 import BoardContent from "./BoardContent/BoardContent";
 
 const Board = () => {
+  // disableGutters to disable the horizontal padding of the container, allow them to spread out full of the screen
+  // maxWidth={false} to allow the container to be full width
+
   return (
     <Container
       disableGutters

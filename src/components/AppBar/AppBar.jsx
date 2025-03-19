@@ -32,6 +32,7 @@ const AppBar = () => {
       sx={{
         backgroundColor: "#fff",
         width: "100%",
+        // custom app bar height, access to the theme of theme.js
         height: (theme) => theme.trelloCustom.appBarHeight,
         display: "flex",
         justifyContent: "space-between",
@@ -94,11 +95,13 @@ const AppBar = () => {
           onChange={(e) => setSearchValue(e.target.value)}
           size="small"
           InputProps={{
+            // start icon
             startAdornment: (
               <InputAdornment position="start">
                 <SearchIcon sx={{ color: "white" }} />
               </InputAdornment>
             ),
+            // end icon
             endAdornment: searchValue && (
               <CloseIcon
                 onClick={() => setSearchValue("")}
