@@ -38,12 +38,14 @@ const BoardBar = ({ board }) => {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Chip
-          sx={MENU_STYLES}
-          icon={<DashboardIcon />}
-          label={board?.title}
-          clickable
-        />
+        <Tooltip title={board?.description}>
+          <Chip
+            sx={MENU_STYLES}
+            icon={<DashboardIcon />}
+            label={board?.title}
+            clickable
+          />
+        </Tooltip>
         <Chip
           sx={MENU_STYLES}
           icon={<VpnLockIcon />}
