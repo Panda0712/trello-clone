@@ -5,15 +5,16 @@ import {
   DndContext,
   DragOverlay,
   getFirstCollision,
-  MouseSensor,
+  // MouseSensor,
   pointerWithin,
-  TouchSensor,
+  // TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { cloneDeep, isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { TouchSensor, MouseSensor } from "~/customLibraries/DndKitSensors";
 import Column from "~/pages/Boards/BoardContent/ListColumns/Column/Column";
 import CustomCard from "~/pages/Boards/BoardContent/ListColumns/Column/ListCards/Card/Card";
 import ListColumns from "~/pages/Boards/BoardContent/ListColumns/ListColumns";
