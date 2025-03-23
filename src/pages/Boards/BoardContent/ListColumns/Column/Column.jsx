@@ -29,7 +29,7 @@ import { toast } from "react-toastify";
 import ListCards from "~/pages/Boards/BoardContent/ListColumns/Column/ListCards/ListCards";
 import { mapOrder } from "~/utils/sorts";
 
-const Column = ({ column }) => {
+const Column = ({ column, createNewCard }) => {
   const [openNewCardForm, setOpenNewCardForm] = useState(false);
   const [cardTitle, setCardTitle] = useState("");
 
@@ -42,7 +42,7 @@ const Column = ({ column }) => {
     setAnchorEl(null);
   };
 
-  const handleAddCard = () => {
+  const handleAddCard = async () => {
     if (!cardTitle.trim()) {
       toast.error("Card title is required", {
         position: "bottom-right",
@@ -50,6 +50,13 @@ const Column = ({ column }) => {
 
       return;
     }
+
+    const newCardData = {
+      title: cardTitle,
+      columnId: column._id,
+    };
+
+    await createNewCard(newCardData);
 
     toggleOpenNewCardForm();
     setCardTitle("");
@@ -195,7 +202,7 @@ const Column = ({ column }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Button onClick={handleAddCard} startIcon={<AddCard />}>
+              <Button onClick={toggleOpenNewCardForm} startIcon={<AddCard />}>
                 Add new card
               </Button>
               <Tooltip title="Drag to move">

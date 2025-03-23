@@ -15,7 +15,7 @@ export const capitalizeFirstLetter = (val) => {
 // generate an object of placeholder card when a column is empty to fix empty columns bug
 export const generatePlaceholderCard = (column) => {
   return {
-    _id: `${column.id}-placeholder-card`,
+    _id: `${column._id}-placeholder-card`,
     boardId: column.boardId,
     columnId: column._id,
     FE_PlaceholderCard: true,

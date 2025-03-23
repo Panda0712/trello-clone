@@ -27,7 +27,12 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: "ACTIVE_DRAG_ITEM_TYPE_CARD",
 };
 
-const BoardContent = ({ board }) => {
+const BoardContent = ({
+  board,
+  createNewColumn,
+  createNewCard,
+  updateColumns,
+}) => {
   // array to store the order of columns
   const [orderedColumns, setOrderColumns] = useState([]);
 
@@ -334,6 +339,8 @@ const BoardContent = ({ board }) => {
         const dndNewOrdered = arrayMove(orderedColumns, oldIndex, newIndex);
         // const dndNewOrderedIds = dndNewOrdered.map((c) => c._id);
 
+        updateColumns(dndNewOrdered);
+
         setOrderColumns(dndNewOrdered);
       }
     }
@@ -413,7 +420,12 @@ const BoardContent = ({ board }) => {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <ListColumns columns={orderedColumns} />;
+      <ListColumns
+        columns={orderedColumns}
+        createNewColumn={createNewColumn}
+        createNewCard={createNewCard}
+      />
+      ;
       <DragOverlay dropAnimation={dropAnimation}>
         {/* return null when the type is null */}
         {!activeDragItemType && null}
