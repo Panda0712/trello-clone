@@ -1,18 +1,24 @@
 // Board Details
 
-import { Container } from "@mui/material";
+import { Box, CircularProgress, Container, Typography } from "@mui/material";
 // import { mockData } from "~/apis/mock-data";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import {
   createNewCardAPI,
   createNewColumnAPI,
+  deleteColumnDetailsAPI,
   fetchBoardDetailsAPI,
+  moveCardToDifferentColumnsAPI,
+  updateBoardDetailsAPI,
+  updateColumnDetailsAPI,
 } from "~/apis";
 import AppBar from "~/components/AppBar/AppBar";
 import { generatePlaceholderCard } from "~/utils/formatters";
+import { mapOrder } from "~/utils/sorts";
 import BoardBar from "./BoardBar/BoardBar";
 import BoardContent from "./BoardContent/BoardContent";
+import { toast } from "react-toastify";
 
 const Board = () => {
   // disableGutters to disable the horizontal padding of the container, allow them to spread out full of the screen
@@ -23,10 +29,14 @@ const Board = () => {
     const boardId = "67dc23b5ecbf6cc167bb117d";
 
     fetchBoardDetailsAPI(boardId).then((data) => {
+      data.columns = mapOrder(data.columns, data.columnOrderIds, "_id");
+
       data.columns.forEach((column) => {
         if (isEmpty(column.cards)) {
           column.cards = [generatePlaceholderCard(column)];
           column.cardOrderIds = [generatePlaceholderCard(column)._id];
+        } else {
+          column.cards = mapOrder(column.cards, column.cardOrderIds, "_id");
         }
       });
       setBoard(data);
@@ -64,14 +74,114 @@ const Board = () => {
       (c) => c._id.toString() === createdCard.columnId.toString()
     );
     if (newColumn) {
-      newColumn.cards.push(createdCard);
-      newColumn.cardOrderIds.push(createdCard._id);
+      if (newColumn.cards.some((card) => card.FE_PlaceholderCard)) {
+        newColumn.cards = [createdCard];
+        newColumn.cardOrderIds = [createdCard._id];
+      } else {
+        newColumn.cards.push(createdCard);
+        newColumn.cardOrderIds.push(createdCard._id);
+      }
     }
 
     setBoard(newBoard);
   };
 
-  const updateColumns = async (dndOrderedColumns) => {};
+  const updateColumns = (dndOrderedColumns) => {
+    const dndOrderedColumnIds = dndOrderedColumns.map((c) => c._id);
+
+    const newBoard = { ...board };
+    newBoard.columns = dndOrderedColumns;
+    newBoard.columnOrderIds = dndOrderedColumnIds;
+
+    setBoard(newBoard);
+
+    updateBoardDetailsAPI(newBoard._id, {
+      columnOrderIds: dndOrderedColumnIds,
+    });
+  };
+
+  const updateCardsSameColumn = (
+    dndOrderedCards,
+    dndOrderedCardIds,
+    columnId
+  ) => {
+    const newBoard = { ...board };
+    const updateColumn = newBoard.columns.find(
+      (c) => c._id.toString() === columnId.toString()
+    );
+
+    if (updateColumn) {
+      updateColumn.cards = dndOrderedCards;
+      updateColumn.cardOrderIds = dndOrderedCardIds;
+    }
+
+    setBoard(newBoard);
+
+    updateColumnDetailsAPI(columnId, {
+      cardOrderIds: dndOrderedCardIds,
+    });
+  };
+
+  const updateCardsDifferentColumns = (
+    currentCardId,
+    prevColumnId,
+    nextColumnId,
+    dndOrderedColumns
+  ) => {
+    const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
+    const newBoard = { ...board };
+    newBoard.columns = dndOrderedColumns;
+    newBoard.columnOrderIds = dndOrderedColumnsIds;
+    setBoard(newBoard);
+
+    let prevCardOrderIds = dndOrderedColumns.find(
+      (c) => c._id.toString() === prevColumnId.toString()
+    )?.cardOrderIds;
+    if (prevCardOrderIds[0].includes("placeholder-card")) prevCardOrderIds = [];
+
+    moveCardToDifferentColumnsAPI({
+      currentCardId,
+      prevColumnId,
+      prevCardOrderIds,
+      nextColumnId,
+      nextCardOrderIds: dndOrderedColumns.find(
+        (c) => c._id.toString() === nextColumnId.toString()
+      )?.cardOrderIds,
+    });
+  };
+
+  const deleteColumnDetails = (columnId) => {
+    const newBoard = { ...board };
+    newBoard.columns = newBoard.columns.filter(
+      (c) => c._id.toString() !== columnId.toString()
+    );
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(
+      (id) => id.toString() !== columnId.toString()
+    );
+    setBoard(newBoard);
+
+    deleteColumnDetailsAPI(columnId).then((res) => {
+      toast.success(res?.deleteResult);
+    });
+  };
+
+  if (!board) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100vw",
+          gap: 2,
+        }}
+      >
+        <CircularProgress />
+        <Typography>Loading Board...</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Container
@@ -90,6 +200,9 @@ const Board = () => {
         createNewColumn={createNewColumn}
         createNewCard={createNewCard}
         updateColumns={updateColumns}
+        updateCardsSameColumn={updateCardsSameColumn}
+        updateCardsDifferentColumns={updateCardsDifferentColumns}
+        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   );

@@ -23,13 +23,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 import ListCards from "~/pages/Boards/BoardContent/ListColumns/Column/ListCards/ListCards";
-import { mapOrder } from "~/utils/sorts";
 
-const Column = ({ column, createNewCard }) => {
+const Column = ({ column, createNewCard, deleteColumnDetails }) => {
   const [openNewCardForm, setOpenNewCardForm] = useState(false);
   const [cardTitle, setCardTitle] = useState("");
 
@@ -42,7 +42,7 @@ const Column = ({ column, createNewCard }) => {
     setAnchorEl(null);
   };
 
-  const handleAddCard = async () => {
+  const handleAddCard = () => {
     if (!cardTitle.trim()) {
       toast.error("Card title is required", {
         position: "bottom-right",
@@ -56,10 +56,39 @@ const Column = ({ column, createNewCard }) => {
       columnId: column._id,
     };
 
-    await createNewCard(newCardData);
+    createNewCard(newCardData);
 
     toggleOpenNewCardForm();
     setCardTitle("");
+  };
+
+  const confirmDeleteColumn = useConfirm();
+  const handleDeleteColumn = () => {
+    confirmDeleteColumn({
+      title: "Delete Column",
+      description:
+        "This action will permanently delete your column and its cards! Are you sure?",
+      confirmationText: "Confirm",
+      cancellationText: "Cancel",
+
+      // allowClose: false,
+      // dialogProps: {
+      //   maxWidth: "xs",
+      // },
+      // confirmationButtonProps: {
+      //   color: "secondary",
+      //   variant: "outlined",
+      // },
+      // cancellationButtonProps: {
+      //   color: "inherit",
+      // },
+      // description: "Please enter Pussy to delete a column =)))",
+      // confirmationKeyword: "Panda",
+    })
+      .then(() => {
+        deleteColumnDetails(column._id);
+      })
+      .catch(() => {});
   };
 
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm);
@@ -81,7 +110,7 @@ const Column = ({ column, createNewCard }) => {
     opacity: isDragging ? 0.5 : undefined,
   };
 
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, "_id");
+  const orderedCards = column.cards;
 
   return (
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
@@ -137,13 +166,22 @@ const Column = ({ column, createNewCard }) => {
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
+              onClick={handleClose}
               MenuListProps={{
                 "aria-labelledby": "basic-column-dropdown",
               }}
             >
-              <MenuItem>
+              <MenuItem
+                onClick={toggleOpenNewCardForm}
+                sx={{
+                  "&:hover": {
+                    color: "success.light",
+                    "& .addIcon": { color: "success.light" },
+                  },
+                }}
+              >
                 <ListItemIcon>
-                  <AddCard fontSize="small" />
+                  <AddCard className="addIcon" fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Add new card</ListItemText>
               </MenuItem>
@@ -167,9 +205,17 @@ const Column = ({ column, createNewCard }) => {
               </MenuItem>
 
               <Divider />
-              <MenuItem>
+              <MenuItem
+                onClick={handleDeleteColumn}
+                sx={{
+                  "&:hover": {
+                    color: "warning.dark",
+                    "& .deleteIcon": { color: "warning.dark" },
+                  },
+                }}
+              >
                 <ListItemIcon>
-                  <DeleteForever fontSize="small" />
+                  <DeleteForever className="deleteIcon" fontSize="small" />
                 </ListItemIcon>
                 <ListItemText>Remove this column</ListItemText>
               </MenuItem>

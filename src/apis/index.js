@@ -8,9 +8,39 @@ export const fetchBoardDetailsAPI = async (boardId) => {
   return res.data;
 };
 
+export const updateBoardDetailsAPI = async (boardId, updatedData) => {
+  const res = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updatedData);
+
+  return res.data;
+};
+
+export const moveCardToDifferentColumnsAPI = async (updatedData) => {
+  const res = await axios.put(
+    `${API_ROOT}/v1/boards/supports/moving_card`,
+    updatedData
+  );
+
+  return res.data;
+};
+
 // Columns
 export const createNewColumnAPI = async (newColumnData) => {
   const res = await axios.post(`${API_ROOT}/v1/columns`, newColumnData);
+  return res.data;
+};
+
+export const updateColumnDetailsAPI = async (columnId, updatedData) => {
+  const res = await axios.put(
+    `${API_ROOT}/v1/columns/${columnId}`,
+    updatedData
+  );
+
+  return res.data;
+};
+
+export const deleteColumnDetailsAPI = async (columnId) => {
+  const res = await axios.delete(`${API_ROOT}/v1/columns/${columnId}`);
+
   return res.data;
 };
 

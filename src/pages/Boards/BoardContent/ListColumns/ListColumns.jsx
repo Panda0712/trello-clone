@@ -8,13 +8,18 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import Column from "~/pages/Boards/BoardContent/ListColumns/Column/Column";
 
-const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
+const ListColumns = ({
+  columns,
+  createNewColumn,
+  createNewCard,
+  deleteColumnDetails,
+}) => {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
   const toggleOpenNewColumnForm = () =>
     setOpenNewColumnForm(!openNewColumnForm);
   const [columnTitle, setColumnTitle] = useState("");
 
-  const handleAddColumn = async () => {
+  const handleAddColumn = () => {
     if (!columnTitle.trim()) {
       toast.error("Column title is required");
       return;
@@ -24,7 +29,7 @@ const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
       title: columnTitle,
     };
 
-    await createNewColumn(newColumnData);
+    createNewColumn(newColumnData);
 
     toggleOpenNewColumnForm();
     setColumnTitle("");
@@ -58,6 +63,7 @@ const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
             key={column._id}
             column={column}
             createNewCard={createNewCard}
+            deleteColumnDetails={deleteColumnDetails}
           />
         ))}
 

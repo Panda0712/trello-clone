@@ -14,12 +14,11 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { cloneDeep, isEmpty } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TouchSensor, MouseSensor } from "~/customLibraries/DndKitSensors";
+import { MouseSensor, TouchSensor } from "~/customLibraries/DndKitSensors";
 import Column from "~/pages/Boards/BoardContent/ListColumns/Column/Column";
 import CustomCard from "~/pages/Boards/BoardContent/ListColumns/Column/ListCards/Card/Card";
 import ListColumns from "~/pages/Boards/BoardContent/ListColumns/ListColumns";
 import { generatePlaceholderCard } from "~/utils/formatters";
-import { mapOrder } from "~/utils/sorts";
 
 // store the type of the active drag item (column or card)
 const ACTIVE_DRAG_ITEM_TYPE = {
@@ -32,6 +31,9 @@ const BoardContent = ({
   createNewColumn,
   createNewCard,
   updateColumns,
+  updateCardsSameColumn,
+  updateCardsDifferentColumns,
+  deleteColumnDetails,
 }) => {
   // array to store the order of columns
   const [orderedColumns, setOrderColumns] = useState([]);
@@ -288,13 +290,26 @@ const BoardContent = ({
 
         overColumn.cardOrderIds = overColumn.cards.map((c) => c._id);
 
-        setOrderColumns((c) =>
-          c._id === oldColumnWhenDraggingCard._id
-            ? oldColumnWhenDraggingCard
-            : c._id === overColumn._id
-            ? overColumn
-            : c
-        );
+        setOrderColumns((prevColumns) => {
+          const nextColumns = cloneDeep(prevColumns);
+
+          const newOrderedColumns = nextColumns.map((c) =>
+            c._id === oldColumnWhenDraggingCard._id
+              ? oldColumnWhenDraggingCard
+              : c._id === overColumn._id
+              ? overColumn
+              : c
+          );
+
+          updateCardsDifferentColumns(
+            activeDraggingCardId,
+            oldColumnWhenDraggingCard._id,
+            overColumn._id,
+            newOrderedColumns
+          );
+
+          return newOrderedColumns;
+        });
       } else {
         // handle when we drag a card in the same column, logic the same with the drag column
         // take the oldIndex
@@ -327,6 +342,12 @@ const BoardContent = ({
             : c
         );
         setOrderColumns(newOrderedColumns);
+
+        updateCardsSameColumn(
+          cardNewOrdered,
+          cardNewOrderIds,
+          oldColumnWhenDraggingCard._id
+        );
       }
     }
 
@@ -339,9 +360,9 @@ const BoardContent = ({
         const dndNewOrdered = arrayMove(orderedColumns, oldIndex, newIndex);
         // const dndNewOrderedIds = dndNewOrdered.map((c) => c._id);
 
-        updateColumns(dndNewOrdered);
-
         setOrderColumns(dndNewOrdered);
+
+        updateColumns(dndNewOrdered);
       }
     }
 
@@ -408,7 +429,7 @@ const BoardContent = ({
 
   // useEffect to catch the time when the order of column is changed
   useEffect(() => {
-    setOrderColumns(mapOrder(board?.columns, board?.columnOrderIds, "_id"));
+    setOrderColumns(board.columns);
   }, [board]);
 
   return (
@@ -424,6 +445,7 @@ const BoardContent = ({
         columns={orderedColumns}
         createNewColumn={createNewColumn}
         createNewCard={createNewCard}
+        deleteColumnDetails={deleteColumnDetails}
       />
       ;
       <DragOverlay dropAnimation={dropAnimation}>
