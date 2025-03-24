@@ -4,6 +4,7 @@ import { Box, CircularProgress, Container, Typography } from "@mui/material";
 // import { mockData } from "~/apis/mock-data";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   createNewCardAPI,
   createNewColumnAPI,
@@ -18,7 +19,6 @@ import { generatePlaceholderCard } from "~/utils/formatters";
 import { mapOrder } from "~/utils/sorts";
 import BoardBar from "./BoardBar/BoardBar";
 import BoardContent from "./BoardContent/BoardContent";
-import { toast } from "react-toastify";
 
 const Board = () => {
   // disableGutters to disable the horizontal padding of the container, allow them to spread out full of the screen
