@@ -5,6 +5,7 @@ import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // accept the process.env of vercel when deploying, access to the domain of vercel
   define: {
     "process.env": process.env,
   },

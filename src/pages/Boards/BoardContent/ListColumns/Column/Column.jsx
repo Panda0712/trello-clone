@@ -51,11 +51,13 @@ const Column = ({ column, createNewCard, deleteColumnDetails }) => {
       return;
     }
 
+    // new card data includes title and columnId
     const newCardData = {
       title: cardTitle,
       columnId: column._id,
     };
 
+    // call api create new card
     createNewCard(newCardData);
 
     toggleOpenNewCardForm();
@@ -86,6 +88,7 @@ const Column = ({ column, createNewCard, deleteColumnDetails }) => {
       // confirmationKeyword: "Panda",
     })
       .then(() => {
+        // call api delete column with the column id
         deleteColumnDetails(column._id);
       })
       .catch(() => {});

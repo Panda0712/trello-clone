@@ -301,6 +301,8 @@ const BoardContent = ({
               : c
           );
 
+          // send data to the parent component to call the api
+          // update cards different columns
           updateCardsDifferentColumns(
             activeDraggingCardId,
             oldColumnWhenDraggingCard._id,
@@ -343,6 +345,7 @@ const BoardContent = ({
         );
         setOrderColumns(newOrderedColumns);
 
+        // call api update cards same column
         updateCardsSameColumn(
           cardNewOrdered,
           cardNewOrderIds,
@@ -362,6 +365,7 @@ const BoardContent = ({
 
         setOrderColumns(dndNewOrdered);
 
+        // call api update columns
         updateColumns(dndNewOrdered);
       }
     }

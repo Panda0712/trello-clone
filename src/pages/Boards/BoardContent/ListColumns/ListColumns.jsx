@@ -29,6 +29,7 @@ const ListColumns = ({
       title: columnTitle,
     };
 
+    // call api add new column
     createNewColumn(newColumnData);
 
     toggleOpenNewColumnForm();
