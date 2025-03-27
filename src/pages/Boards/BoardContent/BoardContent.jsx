@@ -28,12 +28,9 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 
 const BoardContent = ({
   board,
-  createNewColumn,
-  createNewCard,
   updateColumns,
   updateCardsSameColumn,
   updateCardsDifferentColumns,
-  deleteColumnDetails,
 }) => {
   // array to store the order of columns
   const [orderedColumns, setOrderColumns] = useState([]);
@@ -445,13 +442,7 @@ const BoardContent = ({
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <ListColumns
-        columns={orderedColumns}
-        createNewColumn={createNewColumn}
-        createNewCard={createNewCard}
-        deleteColumnDetails={deleteColumnDetails}
-      />
-      ;
+      <ListColumns columns={orderedColumns} />;
       <DragOverlay dropAnimation={dropAnimation}>
         {/* return null when the type is null */}
         {!activeDragItemType && null}

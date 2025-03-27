@@ -4,22 +4,29 @@ import {
 } from "@dnd-kit/sortable";
 import { Close, NoteAdd } from "@mui/icons-material";
 import { Box, Button, TextField } from "@mui/material";
+import { cloneDeep } from "lodash";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { createNewColumnAPI } from "~/apis";
 import Column from "~/pages/Boards/BoardContent/ListColumns/Column/Column";
+import {
+  selectCurrentActiveBoard,
+  updateCurrentActiveBoard,
+} from "~/redux/activeBoard/activeBoardSlice";
+import { generatePlaceholderCard } from "~/utils/formatters";
 
-const ListColumns = ({
-  columns,
-  createNewColumn,
-  createNewCard,
-  deleteColumnDetails,
-}) => {
+const ListColumns = ({ columns }) => {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
   const toggleOpenNewColumnForm = () =>
     setOpenNewColumnForm(!openNewColumnForm);
   const [columnTitle, setColumnTitle] = useState("");
 
-  const handleAddColumn = () => {
+  const board = useSelector(selectCurrentActiveBoard);
+
+  const dispatch = useDispatch();
+
+  const handleAddColumn = async () => {
     if (!columnTitle.trim()) {
       toast.error("Column title is required");
       return;
@@ -30,7 +37,38 @@ const ListColumns = ({
     };
 
     // call api add new column
-    createNewColumn(newColumnData);
+    // createNewColumn(newColumnData);
+    if (!newColumnData) return;
+
+    // add the new column data and the boardId
+    const createdColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id,
+    });
+
+    // after created new column, add the placeholder card
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)];
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id];
+
+    // insert new column data
+    // in redux, if we want to change the value of its data, we should clone deep
+    // to avoid immutable rules
+    // if we use spread operator, it will show error
+    const newBoard = cloneDeep(board);
+    newBoard.columns.push(createdColumn);
+    newBoard.columnOrderIds.push(createdColumn._id);
+
+    // other solution
+    // use concat javascript
+    // push will directly change the value of an array
+    // but concat will merge and create a new array for us to assign value
+    // const newBoard = { ...board };
+    // newBoard.columns = newBoard.columns.concat([createdColumn]);
+    // newBoard.columnOrderIds = newBoard.columnOrderIds.concat([
+    //   createdColumn._id,
+    // ]);
+
+    dispatch(updateCurrentActiveBoard(newBoard));
 
     toggleOpenNewColumnForm();
     setColumnTitle("");
@@ -60,12 +98,7 @@ const ListColumns = ({
         }}
       >
         {columns?.map((column) => (
-          <Column
-            key={column._id}
-            column={column}
-            createNewCard={createNewCard}
-            deleteColumnDetails={deleteColumnDetails}
-          />
+          <Column key={column._id} column={column} />
         ))}
 
         {!openNewColumnForm ? (
