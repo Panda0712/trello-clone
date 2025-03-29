@@ -3,11 +3,13 @@ import authorizedAxiosInstance from "~/utils/authorizeAxios";
 import { API_ROOT } from "~/utils/constants";
 
 // Boards
-// export const fetchBoardDetailsAPI = async (boardId) => {
-//   const res = await authorizedAxiosInstance.get(`${API_ROOT}/v1/boards/${boardId}`);
+export const fetchBoardsAPI = async (searchPath) => {
+  const res = await authorizedAxiosInstance.get(
+    `${API_ROOT}/v1/boards${searchPath}`
+  );
 
-//   return res.data;
-// };
+  return res.data;
+};
 
 // update board details
 export const updateBoardDetailsAPI = async (boardId, updatedData) => {

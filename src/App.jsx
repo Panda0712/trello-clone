@@ -3,6 +3,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import NotFound from "~/pages/404/NotFound";
 import AccountVerification from "~/pages/Auth/AccountVerification";
 import Auth from "~/pages/Auth/Auth";
+import Boards from "~/pages/Boards";
 import Settings from "~/pages/Settings/Settings";
 import { selectCurrentUser } from "~/redux/user/userSlice";
 import Board from "./pages/Boards/_id";
@@ -18,16 +19,12 @@ function App() {
   return (
     <Routes>
       {/* Navigate home page */}
-      <Route
-        path="/"
-        element={
-          <Navigate to="/boards/67dc23b5ecbf6cc167bb117d" replace={true} />
-        }
-      />
+      <Route path="/" element={<Navigate to="/boards" replace={true} />} />
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoutes user={currentUser} />}>
         {/* Board details */}
+        <Route path="/boards" element={<Boards />} />
         <Route path="/boards/:boardId" element={<Board />} />
 
         {/* User Route */}

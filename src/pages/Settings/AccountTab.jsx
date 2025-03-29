@@ -86,6 +86,30 @@ function AccountTab() {
     // }
 
     // Gọi API...
+    toast
+      .promise(
+        dispatch(updateUserAPI(reqData)), // Promise phải là tham số đầu tiên
+        {
+          pending: "Update is in progress...",
+        }
+      )
+      .then((res) => {
+        if (!res.error) {
+          toast.success("User avatar updated successfully!!");
+        }
+
+        e.target.value = "";
+      });
+
+    // toast.promise(
+    //   dispatch(updateUserAPI(reqData)).then((res) => {
+    //     if (!res.error) {
+    //       toast.success("User avatar updated successfully!!");
+    //     }
+
+    //     e.target.value = "";
+    //   })
+    // );
   };
 
   return (

@@ -33,7 +33,6 @@ const theme = extendTheme({
         body: {
           position: "relative",
           height: "100vh",
-          overflowY: "hidden",
           // config scrollbar css for the entire web
           "*::-webkit-scrollbar": {
             width: "8px",
