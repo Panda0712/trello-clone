@@ -15,13 +15,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { ReactComponent as TrelloIcon } from "~/assets/trello.svg";
+import TrelloIcon from "~/assets/trello.svg?react";
 import Profiles from "~/components/AppBar/Menus/Profiles";
 import Recent from "~/components/AppBar/Menus/Recent";
 import Starred from "~/components/AppBar/Menus/Starred";
 import Templates from "~/components/AppBar/Menus/Templates";
 import Workspaces from "~/components/AppBar/Menus/Workspaces";
 import ModeSelect from "../ModeSelect/ModeSelect";
+import { Link } from "react-router-dom";
 
 const AppBar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -51,30 +52,32 @@ const AppBar = () => {
         }}
       >
         <AppsIcon sx={{ color: "white" }} />
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-          }}
-        >
-          <SvgIcon
-            component={TrelloIcon}
-            inheritViewBox
-            fontSize="small"
-            sx={{ color: "white" }}
-          />
-          <Typography
-            variant="span"
+        <Link to="/">
+          <Box
             sx={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              color: "white",
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
             }}
           >
-            Trello
-          </Typography>
-        </Box>
+            <SvgIcon
+              component={TrelloIcon}
+              inheritViewBox
+              fontSize="small"
+              sx={{ color: "white" }}
+            />
+            <Typography
+              variant="span"
+              sx={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                color: "white",
+              }}
+            >
+              Trello
+            </Typography>
+          </Box>
+        </Link>
 
         <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
           <Workspaces />

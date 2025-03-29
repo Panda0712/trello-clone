@@ -1,16 +1,18 @@
 // Board Details
 
-import { Box, CircularProgress, Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 // import { mockData } from "~/apis/mock-data";
 import { cloneDeep } from "lodash";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import {
   moveCardToDifferentColumnsAPI,
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
 } from "~/apis";
 import AppBar from "~/components/AppBar/AppBar";
+import PageLoadingSpinner from "~/components/Loading/PageLoadingSpinner";
 import {
   fetchBoardDetailsAPI,
   selectCurrentActiveBoard,
@@ -18,7 +20,6 @@ import {
 } from "~/redux/activeBoard/activeBoardSlice";
 import BoardBar from "./BoardBar/BoardBar";
 import BoardContent from "./BoardContent/BoardContent";
-import { useParams } from "react-router-dom";
 
 const Board = () => {
   // disableGutters to disable the horizontal padding of the container, allow them to spread out full of the screen
@@ -123,21 +124,7 @@ const Board = () => {
   };
 
   if (!board) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          width: "100vw",
-          gap: 2,
-        }}
-      >
-        <CircularProgress />
-        <Typography>Loading Board...</Typography>
-      </Box>
-    );
+    return <PageLoadingSpinner caption="Loading Board..." />;
   }
 
   return (

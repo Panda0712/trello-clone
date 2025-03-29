@@ -6,8 +6,8 @@ import Button from "@mui/material/Button";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
-import { ReactComponent as AstronautSvg } from "~/assets/404/astronaut.svg";
-import { ReactComponent as PlanetSvg } from "~/assets/404/planet.svg";
+import AstronautSvg from "~/assets/404/astronaut.svg?react";
+import PlanetSvg from "~/assets/404/planet.svg?react";
 
 function NotFound() {
   return (

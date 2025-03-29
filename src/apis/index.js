@@ -1,23 +1,27 @@
-import axios from "axios";
+import { toast } from "react-toastify";
+import authorizedAxiosInstance from "~/utils/authorizeAxios";
 import { API_ROOT } from "~/utils/constants";
 
 // Boards
 // export const fetchBoardDetailsAPI = async (boardId) => {
-//   const res = await axios.get(`${API_ROOT}/v1/boards/${boardId}`);
+//   const res = await authorizedAxiosInstance.get(`${API_ROOT}/v1/boards/${boardId}`);
 
 //   return res.data;
 // };
 
 // update board details
 export const updateBoardDetailsAPI = async (boardId, updatedData) => {
-  const res = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updatedData);
+  const res = await authorizedAxiosInstance.put(
+    `${API_ROOT}/v1/boards/${boardId}`,
+    updatedData
+  );
 
   return res.data;
 };
 
 // move cards to different columns
 export const moveCardToDifferentColumnsAPI = async (updatedData) => {
-  const res = await axios.put(
+  const res = await authorizedAxiosInstance.put(
     `${API_ROOT}/v1/boards/supports/moving_card`,
     updatedData
   );
@@ -27,13 +31,16 @@ export const moveCardToDifferentColumnsAPI = async (updatedData) => {
 
 // Columns
 export const createNewColumnAPI = async (newColumnData) => {
-  const res = await axios.post(`${API_ROOT}/v1/columns`, newColumnData);
+  const res = await authorizedAxiosInstance.post(
+    `${API_ROOT}/v1/columns`,
+    newColumnData
+  );
   return res.data;
 };
 
 // update column details
 export const updateColumnDetailsAPI = async (columnId, updatedData) => {
-  const res = await axios.put(
+  const res = await authorizedAxiosInstance.put(
     `${API_ROOT}/v1/columns/${columnId}`,
     updatedData
   );
@@ -43,13 +50,52 @@ export const updateColumnDetailsAPI = async (columnId, updatedData) => {
 
 // delete columns
 export const deleteColumnDetailsAPI = async (columnId) => {
-  const res = await axios.delete(`${API_ROOT}/v1/columns/${columnId}`);
+  const res = await authorizedAxiosInstance.delete(
+    `${API_ROOT}/v1/columns/${columnId}`
+  );
 
   return res.data;
 };
 
 // Cards
 export const createNewCardAPI = async (newCardData) => {
-  const res = await axios.post(`${API_ROOT}/v1/cards`, newCardData);
+  const res = await authorizedAxiosInstance.post(
+    `${API_ROOT}/v1/cards`,
+    newCardData
+  );
   return res.data;
+};
+
+// Authentication
+// Users
+
+export const registerUserAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(
+    `${API_ROOT}/v1/users/register`,
+    data
+  );
+  toast.success(
+    "Account created successfully! Please check and verify your account before logging in!",
+    { theme: "colored" }
+  );
+  return response.data;
+};
+
+export const verifyUserAPI = async (data) => {
+  const response = await authorizedAxiosInstance.put(
+    `${API_ROOT}/v1/users/verify`,
+    data
+  );
+  toast.success(
+    "Account verified successfully! Now you can login to enjoy our services! Have a good day!",
+    { theme: "colored" }
+  );
+  return response.data;
+};
+
+export const refreshTokenAPI = async () => {
+  const response = await authorizedAxiosInstance.get(
+    `${API_ROOT}/v1/users/refresh_token`
+  );
+  return response.data;
 };
