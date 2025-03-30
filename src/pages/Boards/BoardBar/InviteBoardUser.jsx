@@ -1,19 +1,20 @@
-import { useState } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip";
-import Popover from "@mui/material/Popover";
-import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Popover from "@mui/material/Popover";
 import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { inviteUserToBoardAPI } from "~/apis";
+import FieldErrorAlert from "~/components/Form/FieldErrorAlert";
+import { socketIoInstance } from "~/main";
 import {
   EMAIL_RULE,
-  FIELD_REQUIRED_MESSAGE,
   EMAIL_RULE_MESSAGE,
+  FIELD_REQUIRED_MESSAGE,
 } from "~/utils/validators";
-import FieldErrorAlert from "~/components/Form/FieldErrorAlert";
-import { inviteUserToBoardAPI } from "~/apis";
 
 function InviteBoardUser({ boardId }) {
   /**
@@ -36,10 +37,13 @@ function InviteBoardUser({ boardId }) {
   } = useForm();
   const submitInviteUserToBoard = (data) => {
     const { inviteeEmail } = data;
-    inviteUserToBoardAPI({ inviteeEmail, boardId }).then(() => {
+    inviteUserToBoardAPI({ inviteeEmail, boardId }).then((invitation) => {
       // Clear thẻ input sử dụng react-hook-form bằng setValue
       setValue("inviteeEmail", null);
       setAnchorPopoverElement(null);
+
+      // socket io
+      socketIoInstance.emit("FE_USER_INVITED_TO_BOARD", invitation);
     });
   };
 

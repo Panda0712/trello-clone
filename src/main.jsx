@@ -20,10 +20,14 @@ const persistor = persistStore(store);
 import { injectStore } from "~/utils/authorizeAxios";
 injectStore(store);
 
+import { io } from "socket.io-client";
+import { API_ROOT } from "~/utils/constants";
+export const socketIoInstance = io(API_ROOT);
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter basename="/">
-      <Provider store={store}>
+    <Provider store={store}>
+      <BrowserRouter basename="/">
         <NoSsr>
           <PersistGate persistor={persistor}>
             <CssVarsProvider theme={theme}>
@@ -57,7 +61,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             </CssVarsProvider>
           </PersistGate>
         </NoSsr>
-      </Provider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );

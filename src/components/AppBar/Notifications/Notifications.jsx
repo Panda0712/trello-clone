@@ -14,11 +14,15 @@ import Typography from "@mui/material/Typography";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { socketIoInstance } from "~/main";
 import {
+  addNotifications,
   fetchInvitationsAPI,
   selectCurrentNotifications,
   updateBoardInvitationsAPI,
 } from "~/redux/notifications/notificationsSlice";
+import { selectCurrentUser } from "~/redux/user/userSlice";
 
 const BOARD_INVITATION_STATUS = {
   PENDING: "PENDING",
@@ -29,11 +33,16 @@ const BOARD_INVITATION_STATUS = {
 function Notifications() {
   const dispatch = useDispatch();
   const currentNotifications = useSelector(selectCurrentNotifications);
+  const currentUser = useSelector(selectCurrentUser);
+  const navigate = useNavigate();
 
+  const [newNotification, setNewNotification] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClickNotificationIcon = (event) => {
     setAnchorEl(event.currentTarget);
+
+    setNewNotification(false);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -41,21 +50,42 @@ function Notifications() {
 
   const updateBoardInvitation = (status, notificationId) => {
     dispatch(updateBoardInvitationsAPI({ status, notificationId })).then(
-      () => {}
+      (res) => {
+        if (
+          res.payload.boardInvitation.status ===
+          BOARD_INVITATION_STATUS.ACCEPTED
+        ) {
+          navigate(`/boards/${res.payload.boardInvitation.boardId}`);
+        }
+      }
     );
   };
 
   useEffect(() => {
     dispatch(fetchInvitationsAPI());
-  }, [dispatch]);
+
+    const onReceiveNewInvitation = (invitation) => {
+      if (invitation.inviteeId === currentUser._id) {
+        dispatch(addNotifications(invitation));
+
+        setNewNotification(true);
+      }
+    };
+
+    // listen a realtime event
+    socketIoInstance.on("BE_USER_INVITED_TO_BOARD", onReceiveNewInvitation);
+
+    return () => {
+      socketIoInstance.off("BE_USER_INVITED_TO_BOARD", onReceiveNewInvitation);
+    };
+  }, [dispatch, currentUser._id]);
 
   return (
     <Box>
       <Tooltip title="Notifications">
         <Badge
           color="warning"
-          // variant="none"
-          variant="dot"
+          variant={newNotification ? "dot" : "none"}
           sx={{ cursor: "pointer" }}
           id="basic-button-open-notification"
           aria-controls={open ? "basic-notification-drop-down" : undefined}
@@ -65,8 +95,7 @@ function Notifications() {
         >
           <NotificationsNoneIcon
             sx={{
-              // color: 'white'
-              color: "yellow",
+              color: newNotification ? "yellow" : "white",
             }}
           />
         </Badge>
