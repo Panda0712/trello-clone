@@ -1,5 +1,6 @@
-import { GlobalStyles, NoSsr } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
+import "react-toastify/dist/ReactToastify.css";
+import { GlobalStyles, NoSsr } from "@mui/material";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
 import { ConfirmProvider } from "material-ui-confirm";
 import React from "react";
@@ -7,7 +8,6 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import App from "~/App.jsx";

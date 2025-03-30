@@ -2,10 +2,10 @@ import AddToDriveIcon from "@mui/icons-material/AddToDrive";
 import BoltIcon from "@mui/icons-material/Bolt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import VpnLockIcon from "@mui/icons-material/VpnLock";
-import { Box, Button, Chip, Tooltip } from "@mui/material";
+import { Box, Chip, Tooltip } from "@mui/material";
 import BoardUserGroup from "~/pages/Boards/BoardBar/BoardUserGroup";
+import InviteBoardUser from "~/pages/Boards/BoardBar/InviteBoardUser";
 import { capitalizeFirstLetter } from "~/utils/formatters";
 
 const MENU_STYLES = {
@@ -73,19 +73,7 @@ const BoardBar = ({ board }) => {
         />
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Button
-          variant="outlined"
-          startIcon={<PersonAddIcon />}
-          sx={{
-            color: "white",
-            borderColor: "white",
-            "&:hover": {
-              borderColor: "white",
-            },
-          }}
-        >
-          Invite
-        </Button>
+        <InviteBoardUser boardId={board._id} />
 
         <BoardUserGroup boardUsers={board?.FE_allUsers} />
       </Box>

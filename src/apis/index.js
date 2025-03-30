@@ -117,3 +117,13 @@ export const refreshTokenAPI = async () => {
   );
   return response.data;
 };
+
+// Invitation
+export const inviteUserToBoardAPI = async (data) => {
+  const res = await authorizedAxiosInstance.post(
+    `${API_ROOT}/v1/invitations/board`,
+    data
+  );
+  toast.success("User invited to board successfully!!");
+  return res.data;
+};

@@ -10,7 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { updateCurrentActiveCard } from "~/redux/activeCard/activeCardSlice";
+import {
+  toggleShowModalActiveCard,
+  updateCurrentActiveCard,
+} from "~/redux/activeCard/activeCardSlice";
 
 const CustomCard = ({ card }) => {
   const {
@@ -39,6 +42,7 @@ const CustomCard = ({ card }) => {
 
   const setActiveCardToRedux = () => {
     dispatch(updateCurrentActiveCard(card));
+    dispatch(toggleShowModalActiveCard());
   };
 
   return (
@@ -88,7 +92,7 @@ const CustomCard = ({ card }) => {
               {card.comments.length}
             </Button>
           )}
-          {!!card?.attachments.length && (
+          {!!card?.attachments?.length && (
             <Button size="small" startIcon={<Attachment />}>
               {card.attachments.length}
             </Button>

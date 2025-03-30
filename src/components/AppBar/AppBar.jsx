@@ -2,10 +2,8 @@ import AppsIcon from "@mui/icons-material/Apps";
 import CloseIcon from "@mui/icons-material/Close";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  Badge,
   Box,
   Button,
   InputAdornment,
@@ -15,14 +13,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import TrelloIcon from "~/assets/trello.svg?react";
 import Profiles from "~/components/AppBar/Menus/Profiles";
 import Recent from "~/components/AppBar/Menus/Recent";
 import Starred from "~/components/AppBar/Menus/Starred";
 import Templates from "~/components/AppBar/Menus/Templates";
 import Workspaces from "~/components/AppBar/Menus/Workspaces";
+import Notifications from "~/components/AppBar/Notifications/Notifications";
 import ModeSelect from "../ModeSelect/ModeSelect";
-import { Link } from "react-router-dom";
 
 const AppBar = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -148,11 +147,7 @@ const AppBar = () => {
         />
         <ModeSelect />
 
-        <Tooltip title="Notifications">
-          <Badge color="warning" variant="dot" sx={{ cursor: "pointer" }}>
-            <NotificationsNoneIcon sx={{ color: "white" }} />
-          </Badge>
-        </Tooltip>
+        <Notifications />
 
         <Tooltip title="Help">
           <HelpOutlineIcon sx={{ cursor: "pointer", color: "white" }} />
