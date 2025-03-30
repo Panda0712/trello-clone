@@ -11,6 +11,13 @@ export const fetchBoardsAPI = async (searchPath) => {
   return res.data;
 };
 
+// create new board
+export const createNewBoardAPI = async (data) => {
+  const res = await authorizedAxiosInstance.post(`${API_ROOT}/v1/boards`, data);
+  toast.success("Board created successfully!!");
+  return res.data;
+};
+
 // update board details
 export const updateBoardDetailsAPI = async (boardId, updatedData) => {
   const res = await authorizedAxiosInstance.put(
@@ -28,6 +35,15 @@ export const moveCardToDifferentColumnsAPI = async (updatedData) => {
     updatedData
   );
 
+  return res.data;
+};
+
+// update card
+export const updateCardDetailsAPI = async (cardId, updateData) => {
+  const res = await authorizedAxiosInstance.put(
+    `${API_ROOT}/v1/cards/${cardId}`,
+    updateData
+  );
   return res.data;
 };
 

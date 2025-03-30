@@ -21,14 +21,18 @@ import {
   MenuItem,
   TextField,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { cloneDeep } from "lodash";
 import { useConfirm } from "material-ui-confirm";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { createNewCardAPI, deleteColumnDetailsAPI } from "~/apis";
+import {
+  createNewCardAPI,
+  deleteColumnDetailsAPI,
+  updateColumnDetailsAPI,
+} from "~/apis";
+import ToggleFocusInput from "~/components/Form/ToggleFocusInput";
 
 import ListCards from "~/pages/Boards/BoardContent/ListColumns/Column/ListCards/ListCards";
 import {
@@ -167,6 +171,18 @@ const Column = ({ column }) => {
 
   const orderedCards = column.cards;
 
+  const onUpdateColumnTitle = (newTitle) => {
+    updateColumnDetailsAPI(column._id, { title: newTitle }).then(() => {
+      const newBoard = cloneDeep(board);
+      const columnToUpdate = newBoard.find(
+        (c) => String(c._id) === String(column._id)
+      );
+      if (columnToUpdate) columnToUpdate.title = newTitle;
+
+      dispatch(updateCurrentActiveBoard(newBoard));
+    });
+  };
+
   return (
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       <Box
@@ -195,7 +211,7 @@ const Column = ({ column }) => {
             alignItems: "center",
           }}
         >
-          <Typography
+          {/* <Typography
             variant="h6"
             sx={{
               fontSize: "1rem",
@@ -204,7 +220,12 @@ const Column = ({ column }) => {
             }}
           >
             {column?.title}
-          </Typography>
+          </Typography> */}
+          <ToggleFocusInput
+            value={column?.title}
+            onChangedValue={onUpdateColumnTitle}
+            data-no-dnd="true"
+          />
           <Box>
             <Tooltip title="More options">
               <ExpandMore

@@ -26,10 +26,31 @@ const activeBoardSlice = createSlice({
     updateCurrentActiveBoard: (state, action) => {
       state.currentActiveBoard = action.payload;
     },
+    updateCardInBoard: (state, action) => {
+      const incomingCard = action.payload;
+
+      const updateColumn = state.currentActiveBoard.columns.find(
+        (c) => c._id.toString() === incomingCard.columnId.toString()
+      );
+      if (updateColumn) {
+        const updateCard = updateColumn.cards.find(
+          (c) => c._id.toString() === incomingCard._id.toString()
+        );
+
+        if (updateCard) {
+          Object.keys(updateCard).forEach(
+            (key) => (updateCard[key] = incomingCard[key])
+          );
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
       let board = action.payload;
+
+      // board member will be merged by memberIds and ownerIds array
+      board.FE_allUsers = board.owners.concat(board.members);
 
       board.columns = mapOrder(board.columns, board.columnOrderIds, "_id");
 
@@ -49,7 +70,8 @@ const activeBoardSlice = createSlice({
   },
 });
 
-export const { updateCurrentActiveBoard } = activeBoardSlice.actions;
+export const { updateCurrentActiveBoard, updateCardInBoard } =
+  activeBoardSlice.actions;
 
 // Selectors
 export const selectCurrentActiveBoard = (state) => {

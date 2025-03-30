@@ -9,6 +9,8 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { updateCurrentActiveCard } from "~/redux/activeCard/activeCardSlice";
 
 const CustomCard = ({ card }) => {
   const {
@@ -19,6 +21,8 @@ const CustomCard = ({ card }) => {
     transition,
     isDragging,
   } = useSortable({ id: card._id, data: { ...card } });
+
+  const dispatch = useDispatch();
 
   const dndKitCardStyles = {
     // touchAction: "none",
@@ -33,8 +37,13 @@ const CustomCard = ({ card }) => {
     !!card?.comments?.length ||
     !!card?.attachments?.length;
 
+  const setActiveCardToRedux = () => {
+    dispatch(updateCurrentActiveCard(card));
+  };
+
   return (
     <Card
+      onClick={setActiveCardToRedux}
       ref={setNodeRef}
       style={dndKitCardStyles}
       {...attributes}

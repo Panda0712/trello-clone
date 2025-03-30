@@ -13,11 +13,13 @@ import {
 } from "~/apis";
 import AppBar from "~/components/AppBar/AppBar";
 import PageLoadingSpinner from "~/components/Loading/PageLoadingSpinner";
+import ActiveCard from "~/components/Modal/ActiveCard/ActiveCard";
 import {
   fetchBoardDetailsAPI,
   selectCurrentActiveBoard,
   updateCurrentActiveBoard,
 } from "~/redux/activeBoard/activeBoardSlice";
+import { selectCurrentActiveCard } from "~/redux/activeCard/activeCardSlice";
 import BoardBar from "./BoardBar/BoardBar";
 import BoardContent from "./BoardContent/BoardContent";
 
@@ -25,6 +27,7 @@ const Board = () => {
   // disableGutters to disable the horizontal padding of the container, allow them to spread out full of the screen
   // maxWidth={false} to allow the container to be full width
   const board = useSelector(selectCurrentActiveBoard);
+  const activeCard = useSelector(selectCurrentActiveCard);
 
   const { boardId } = useParams();
 
@@ -137,6 +140,7 @@ const Board = () => {
         overflowY: "hidden",
       }}
     >
+      {activeCard && <ActiveCard />}
       <AppBar />
       <BoardBar board={board} />
       <BoardContent
