@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { inviteUserToBoardAPI } from "~/apis";
 import FieldErrorAlert from "~/components/Form/FieldErrorAlert";
-import { socketIoInstance } from "~/main";
+import { socketIoInstance } from "~/socketClient";
 import {
   EMAIL_RULE,
   EMAIL_RULE_MESSAGE,
